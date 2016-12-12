@@ -26,6 +26,7 @@ def countMinMoves(initialFloors):
                     newFloors[nextFloor] = (newFloors[nextFloor][0] + numGensTake, newFloors[nextFloor][1] + numChipsTake)
                     if (tuple(newFloors), nextFloor) not in visited and all(g == 0 or g >= m for (g, m) in newFloors):
                         q.append((tuple(newFloors), nextFloor, numMoves + 1))
+    return None
 
 floors = [(len(re.findall("([\w]+) generator", line)), len(re.findall("([\w]+)-compatible", line))) for line in lines]
 
