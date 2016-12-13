@@ -4,7 +4,7 @@ FAVE_NUM = 1362
 MAZE_SIZE = 40
 WALL_CHAR = '#'
 OPEN_CHAR = '.'
-IMPOSSIBLE_COST = float('inf')
+IMPOSSIBLE_DIST = float('inf')
 
 def f(x,y):
     return [OPEN_CHAR, WALL_CHAR][bin(x*x + 3*x + 2*x*y + y + y*y + FAVE_NUM).count('1') % 2]
@@ -13,13 +13,13 @@ def BFS(initialPos, goalPos, maze, distMax = None):
     q = deque()
     q.append((initialPos, 0))
     visited = set()
-    posUnderDistMax = set()
+    posWithinDistMax = set()
     while q:
         curPos, dist = q.popleft()
         if distMax == None and curPos == goalPos:
             return (dist, set())
         if distMax != None and dist <= distMax:
-            posUnderDistMax.add(curPos)
+            posWithinDistMax.add(curPos)
         if curPos not in visited:
             visited.add(curPos)
             y, x = curPos
@@ -29,7 +29,7 @@ def BFS(initialPos, goalPos, maze, distMax = None):
                     and maze[newY][newX] == OPEN_CHAR \
                     and (newY, newX) not in visited:
                         q.append(((newY, newX), dist + 1))
-    return (IMPOSSIBLE_COST, posUnderDistMax)
+    return (IMPOSSIBLE_DIST, posWithinDistMax)
 
 maze = [[f(x, y) for x in range(MAZE_SIZE)] for y in range(MAZE_SIZE)]
 
