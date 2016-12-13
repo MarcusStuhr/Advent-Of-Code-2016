@@ -1,7 +1,7 @@
 from collections import deque
 
 FAVE_NUM = 1362
-MAZE_SIZE = 40
+MAZE_SIZE = 100
 WALL_CHAR = '#'
 OPEN_CHAR = '.'
 IMPOSSIBLE_DIST = float('inf')
