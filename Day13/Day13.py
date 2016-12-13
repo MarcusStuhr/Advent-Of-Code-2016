@@ -15,13 +15,12 @@ def BFS(initialPos, goalPos, distMax = None):
     q = deque()
     q.append((initialPos, 0))
     visited = set()
-    posWithinDistMax = set()
     while q:
         curPos, dist = q.popleft()
         if curPos == goalPos:
-            return (dist, posWithinDistMax)
-        if distMax != None and dist <= distMax:
-            posWithinDistMax.add(curPos)
+            return (dist, visited)
+        if distMax != None and dist > distMax:
+            continue
         if curPos not in visited:
             visited.add(curPos)
             y, x = curPos
@@ -31,7 +30,7 @@ def BFS(initialPos, goalPos, distMax = None):
                     and f(newX, newY) == OPEN_CHAR \
                     and (newY, newX) not in visited:
                         q.append(((newY, newX), dist + 1))
-    return (IMPOSSIBLE_DIST, posWithinDistMax)
+    return (IMPOSSIBLE_DIST, visited)
 
 print(BFS((1, 1), (39, 31))[0]) #part 1 answer
 print(len(BFS((1, 1), None, 50)[1])) #part 2 answer
