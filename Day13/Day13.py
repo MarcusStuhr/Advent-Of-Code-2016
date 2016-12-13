@@ -6,7 +6,7 @@ OPEN_CHAR = '.'
 IMPOSSIBLE_DIST = float('inf')
 
 def f(x, y, memo = {}):
-    key = (x,y)
+    key = (x, y)
     if key in memo: return memo[key]
     memo[key] = [OPEN_CHAR, WALL_CHAR][bin(x*x + 3*x + 2*x*y + y + y*y + FAVE_NUM).count('1') % 2]
     return memo[key]
