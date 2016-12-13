@@ -16,8 +16,8 @@ def BFS(initialPos, goalPos, maze, distMax = None):
     posWithinDistMax = set()
     while q:
         curPos, dist = q.popleft()
-        if distMax == None and curPos == goalPos:
-            return (dist, set())
+        if curPos == goalPos:
+            return (dist, posWithinDistMax)
         if distMax != None and dist <= distMax:
             posWithinDistMax.add(curPos)
         if curPos not in visited:
