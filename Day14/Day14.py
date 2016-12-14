@@ -9,9 +9,9 @@ NUM_PEEK_AHEAD = 1000
 VALID_REPEATABLE_CHARSPACE = "0123456789abcdef"
 
 def getHash(salt, index, numKeyStretchIterations):
-    hash = md5(str(salt + str(index)).encode('utf-8')).hexdigest()
+    hash = md5(str(salt + str(index)).encode()).hexdigest()
     for stretchIndex in range(numKeyStretchIterations):
-        hash = md5(hash.encode('utf-8')).hexdigest()
+        hash = md5(hash.encode()).hexdigest()
     return hash
 
 def resolveKCounts(counts, k, hash, index):
