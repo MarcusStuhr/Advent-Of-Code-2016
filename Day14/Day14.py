@@ -4,9 +4,11 @@ from collections import deque, defaultdict
 import re
 
 SALT = "yjdafjpo"
+VALID_REPEATABLE_CHARSPACE = "0123456789abcdef"
 TARGET_PAD_KEY_COUNT = 64
 NUM_PEEK_AHEAD = 1000
-VALID_REPEATABLE_CHARSPACE = "0123456789abcdef"
+NUM_REPS_FIRST, NUM_REPS_SECOND = 3, 5
+NUM_KEY_STRETCHES = 2016
 
 def getHash(salt, index, numKeyStretchIterations):
     hash = md5(str(salt + str(index)).encode()).hexdigest()
@@ -23,13 +25,13 @@ def findIndexOneTimePadKey(salt, targetPadKeyCount, numPeekAhead, numKeyStretchI
     rollingCache = deque([getHash(salt, index, numKeyStretchIterations) for index in range(numPeekAhead)])
     quintCounts = defaultdict(lambda : defaultdict(int))
     for hashIndex, hash in enumerate(rollingCache):
-        resolveKCounts(quintCounts, 5, hash, hashIndex)
+        resolveKCounts(quintCounts, NUM_REPS_SECOND, hash, hashIndex)
     for index in count(0):
         hash  = rollingCache[0]
         peekHash = getHash(salt, index + numPeekAhead, numKeyStretchIterations)
         rollingCache.append(peekHash)
-        resolveKCounts(quintCounts, 5, peekHash, index + numPeekAhead)
-        trip = re.search(r"(\w)\1\1", hash)
+        resolveKCounts(quintCounts, NUM_REPS_SECOND, peekHash, index + numPeekAhead)
+        trip = re.search(r"(\w){}".format("\\1" * (NUM_REPS_FIRST - 1)), hash)
         if trip:
             chKey = trip.group()[0]
             if quintCounts[index + numPeekAhead][chKey] > quintCounts[index][chKey]:
@@ -40,4 +42,4 @@ def findIndexOneTimePadKey(salt, targetPadKeyCount, numPeekAhead, numKeyStretchI
         rollingCache.popleft()
 
 print(findIndexOneTimePadKey(SALT, TARGET_PAD_KEY_COUNT, NUM_PEEK_AHEAD))
-print(findIndexOneTimePadKey(SALT, TARGET_PAD_KEY_COUNT, NUM_PEEK_AHEAD, 2016))
+print(findIndexOneTimePadKey(SALT, TARGET_PAD_KEY_COUNT, NUM_PEEK_AHEAD, NUM_KEY_STRETCHES))
