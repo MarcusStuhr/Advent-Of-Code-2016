@@ -23,22 +23,22 @@ def resolveKCounts(counts, k, hash, index):
 def findIndexOneTimePadKey(salt, targetPadKeyCount, numPeekAhead, numKeyStretchIterations = 0):
     padsFound = 0
     rollingCache = deque([getHash(salt, index, numKeyStretchIterations) for index in range(numPeekAhead)])
-    quintCounts = defaultdict(lambda : defaultdict(int))
+    counts = defaultdict(lambda : defaultdict(int))
     for hashIndex, hash in enumerate(rollingCache):
-        resolveKCounts(quintCounts, NUM_REPS_SECOND, hash, hashIndex)
+        resolveKCounts(counts, NUM_REPS_SECOND, hash, hashIndex)
     for index in count(0):
         hash  = rollingCache[0]
         peekHash = getHash(salt, index + numPeekAhead, numKeyStretchIterations)
         rollingCache.append(peekHash)
-        resolveKCounts(quintCounts, NUM_REPS_SECOND, peekHash, index + numPeekAhead)
+        resolveKCounts(counts, NUM_REPS_SECOND, peekHash, index + numPeekAhead)
         trip = re.search(r"(\w){}".format("\\1" * (NUM_REPS_FIRST - 1)), hash)
         if trip:
             chKey = trip.group()[0]
-            if quintCounts[index + numPeekAhead][chKey] > quintCounts[index][chKey]:
+            if counts[index + numPeekAhead][chKey] > counts[index][chKey]:
                 padsFound += 1
                 if (padsFound == targetPadKeyCount):
                     return index
-        del quintCounts[index]
+        del counts[index]
         rollingCache.popleft()
 
 print(findIndexOneTimePadKey(SALT, TARGET_PAD_KEY_COUNT, NUM_PEEK_AHEAD))
