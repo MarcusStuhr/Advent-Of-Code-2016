@@ -15,7 +15,7 @@ def resolve_k_counts(counts, k, cur_hash, index):
     for ch_key in "0123456789abcdef":
         counts[index][ch_key] = counts[index - 1][ch_key] + (ch_key * k in cur_hash)
 
-def find_index_one_time_pad_key(salt, target_pad_key_count, num_peek_ahead, num_reps_first, num_reps_second, num_keystretch_iterations = 0):
+def find_index_one_time_pad_key(salt, target_pad_key_count = 64, num_peek_ahead = 1000, num_reps_first = 3, num_reps_second = 5, num_keystretch_iterations = 0):
     pads_found = 0
     rolling_cache = deque([get_hash(salt, index, num_keystretch_iterations) for index in range(num_peek_ahead)])
     counts = defaultdict(lambda : defaultdict(int))
@@ -36,10 +36,5 @@ def find_index_one_time_pad_key(salt, target_pad_key_count, num_peek_ahead, num_
         del counts[index]
         rolling_cache.popleft()
 
-target_pad_key_count = 64
-num_peek_ahead = 1000
-num_reps_first, num_reps_second = 3, 5
-num_keystretch_iterations = 2016
-
-print(find_index_one_time_pad_key(SALT, target_pad_key_count, num_peek_ahead, num_reps_first, num_reps_second))
-print(find_index_one_time_pad_key(SALT, target_pad_key_count, num_peek_ahead, num_reps_first, num_reps_second, num_keystretch_iterations))
+print(find_index_one_time_pad_key(SALT))
+print(find_index_one_time_pad_key(SALT, num_keystretch_iterations = 2016))
