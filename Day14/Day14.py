@@ -5,41 +5,41 @@ import re
 
 SALT = "yjdafjpo"
 
-def getHash(salt, index, numKeyStretchIterations):
+def get_hash(salt, index, num_keystretch_iterations):
     hash = md5(str(salt + str(index)).encode()).hexdigest()
-    for stretchIndex in range(numKeyStretchIterations):
+    for stretch_index in range(num_keystretch_iterations):
         hash = md5(hash.encode()).hexdigest()
     return hash
 
-def resolveKCounts(counts, k, hash, index):
-    for chKey in "0123456789abcdef":
-        counts[index][chKey] = counts[index - 1][chKey] + (chKey * k in hash)
+def resolve_k_counts(counts, k, hash, index):
+    for ch_key in "0123456789abcdef":
+        counts[index][ch_key] = counts[index - 1][ch_key] + (ch_key * k in hash)
 
-def findIndexOneTimePadKey(salt, targetPadKeyCount, numPeekAhead, numRepsFirst, numRepsSecond, numKeyStretchIterations = 0):
-    padsFound = 0
-    rollingCache = deque([getHash(salt, index, numKeyStretchIterations) for index in range(numPeekAhead)])
+def find_index_one_time_pad_key(salt, target_pad_key_count, num_peek_ahead, num_reps_first, num_reps_second, num_keystretch_iterations = 0):
+    pads_found = 0
+    rolling_cache = deque([get_hash(salt, index, num_keystretch_iterations) for index in range(num_peek_ahead)])
     counts = defaultdict(lambda : defaultdict(int))
-    for hashIndex, hash in enumerate(rollingCache):
-        resolveKCounts(counts, numRepsSecond, hash, hashIndex)
+    for hash_index, hash in enumerate(rolling_cache):
+        resolve_k_counts(counts, num_reps_second, hash, hash_index)
     for index in count(0):
-        hash  = rollingCache[0]
-        peekHash = getHash(salt, index + numPeekAhead, numKeyStretchIterations)
-        rollingCache.append(peekHash)
-        resolveKCounts(counts, numRepsSecond, peekHash, index + numPeekAhead)
-        curRep = re.search(r"(\w){}".format("\\1" * (numRepsFirst - 1)), hash)
-        if curRep:
-            chKey = curRep.group()[0]
-            if counts[index + numPeekAhead][chKey] > counts[index][chKey]:
-                padsFound += 1
-                if (padsFound == targetPadKeyCount):
+        hash  = rolling_cache[0]
+        peek_hash = get_hash(salt, index + num_peek_ahead, num_keystretch_iterations)
+        rolling_cache.append(peek_hash)
+        resolve_k_counts(counts, num_reps_second, peek_hash, index + num_peek_ahead)
+        cur_rep = re.search(r"(\w){}".format("\\1" * (num_reps_first - 1)), hash)
+        if cur_rep:
+            ch_key = cur_rep.group()[0]
+            if counts[index + num_peek_ahead][ch_key] > counts[index][ch_key]:
+                pads_found += 1
+                if (pads_found == target_pad_key_count):
                     return index
         del counts[index]
-        rollingCache.popleft()
+        rolling_cache.popleft()
 
-targetPadKeyCount = 64
-numPeekAhead = 1000
-numRepsFirst, numRepsSecond = 3, 5
-numKeyStretches = 2016
+target_pad_key_count = 64
+num_peek_ahead = 1000
+num_reps_first, num_reps_second = 3, 5
+num_keystretch_iterations = 2016
 
-print(findIndexOneTimePadKey(SALT, targetPadKeyCount, numPeekAhead, numRepsFirst, numRepsSecond))
-print(findIndexOneTimePadKey(SALT, targetPadKeyCount, numPeekAhead, numRepsFirst, numRepsSecond, numKeyStretches))
+print(find_index_one_time_pad_key(SALT, target_pad_key_count, num_peek_ahead, num_reps_first, num_reps_second))
+print(find_index_one_time_pad_key(SALT, target_pad_key_count, num_peek_ahead, num_reps_first, num_reps_second, num_keystretch_iterations))
