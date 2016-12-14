@@ -31,9 +31,9 @@ def findIndexOneTimePadKey(salt, targetPadKeyCount, numPeekAhead, numKeyStretchI
         peekHash = getHash(salt, index + numPeekAhead, numKeyStretchIterations)
         rollingCache.append(peekHash)
         resolveKCounts(counts, NUM_REPS_SECOND, peekHash, index + numPeekAhead)
-        trip = re.search(r"(\w){}".format("\\1" * (NUM_REPS_FIRST - 1)), hash)
-        if trip:
-            chKey = trip.group()[0]
+        curRep = re.search(r"(\w){}".format("\\1" * (NUM_REPS_FIRST - 1)), hash)
+        if curRep:
+            chKey = curRep.group()[0]
             if counts[index + numPeekAhead][chKey] > counts[index][chKey]:
                 padsFound += 1
                 if (padsFound == targetPadKeyCount):
