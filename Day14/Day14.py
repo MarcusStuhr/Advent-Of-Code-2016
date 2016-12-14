@@ -16,26 +16,16 @@ def getHash(salt, index, numKeyStretchIterations, memo = {}):
     memo[memoKey] = hash
     return hash
 
-def getRepMatch(hash, numReps, memo = {}):
-    memoKey = (hash, numReps)
-    if memoKey in memo:
-        return memo[memoKey]
-    pattern = r"(\w){}".format("\\1" * (numReps - 1))
-    matchObject = re.search(pattern, hash)
-    memo[memoKey] = matchObject
-    return matchObject
-
 def findIndexOneTimePadKey(salt, targetPadKeyCount, numPeekAhead, numKeyStretchIterations = 0):
     padsFound = 0
     for index in count(0):
         hash = getHash(salt, index, numKeyStretchIterations)
-        trip = getRepMatch(hash, 3)
+        trip = re.search(r"(\w)\1\1", hash)
         if trip:
             tripChar = trip.group()[0]
             for peekIndex in range(1, numPeekAhead + 1):
                 newHash = getHash(salt, index + peekIndex, numKeyStretchIterations)
-                quint = getRepMatch(newHash, 5)
-                if quint and quint.group()[0] == tripChar:
+                if tripChar*5 in newHash:
                     padsFound += 1
                     if padsFound == targetPadKeyCount:
                         return index
