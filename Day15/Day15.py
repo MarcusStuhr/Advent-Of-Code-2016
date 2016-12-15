@@ -36,6 +36,6 @@ for line in lines:
     moduli.append(num_positions)
 
 print(crt(values, moduli)) # part 1 answer
-values.append(-(len(values) + 1) - 0)
+values.append(-(len(values) + 1))
 moduli.append(11)
 print(crt(values, moduli)) #part 2 answer
