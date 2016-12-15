@@ -35,7 +35,7 @@ for line in lines:
     values.append(-disc - (cur_pos - at_time) % num_positions)
     moduli.append(num_positions)
 
-print(crt(values, moduli)) # part 1 answer
+print(crt(values, moduli)) #part 1 answer
 values.append(-(len(values) + 1))
 moduli.append(11)
 print(crt(values, moduli)) #part 2 answer
