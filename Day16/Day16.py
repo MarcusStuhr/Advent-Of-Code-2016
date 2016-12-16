@@ -7,7 +7,7 @@ def get_checksum(disk):
 
 def fill_disk(state, disk_size):
     while len(state) < disk_size:
-        state = state + '0' + ''.join('1' if x == '0' else '0' for x in state[::-1])
+        state = state + '0' + ''.join(['0', '1'][x == '0'] for x in state[::-1])
     return state[:disk_size]
 
 state = "00101000101111010"
