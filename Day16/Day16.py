@@ -1,9 +1,8 @@
 def get_checksum(disk):
     checksum = disk
-    while True:
+    while len(checksum) % 2 == 0:
         checksum = ''.join('1' if checksum[i] == checksum[i + 1] else '0' for i in range(0, len(checksum), 2))
-        if len(checksum) % 2 == 1:
-            return checksum
+    return checksum
 
 def fill_disk(state, disk_size):
     while len(state) < disk_size:
