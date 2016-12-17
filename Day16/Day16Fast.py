@@ -11,7 +11,7 @@ def reverse_and_flip_bits(a):
     return flip_bits(a)[::-1]
 
 def largest_pow_2_dividing(n):
-    return n & -n
+    return n & (~n + 1)
 
 def get_inverse_dragon_bitcount_parity(n):
     if n < 0 : return 0
@@ -40,9 +40,8 @@ def get_checksum(a, disk_capacity):
     for k in range(disk_capacity // x):
         count_right = cumulative_bitcount_parity_expanded((k + 1) * x - 1, len(a), counts_a, counts_b)
         count_left = cumulative_bitcount_parity_expanded(k * x - 1, len(a), counts_a, counts_b)
-        checksum += str(int(count_right - count_left & 1 == 0))
+        checksum += str(int((count_right - count_left) & 1 == 0))
     return checksum if disk_capacity & 1 == 0 else flip_bits(checksum)
 
 print(get_checksum(input_code, 272))
 print(get_checksum(input_code, 35651584))
-
