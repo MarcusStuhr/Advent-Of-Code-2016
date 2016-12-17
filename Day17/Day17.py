@@ -17,7 +17,7 @@ def bfs(code, start, end):
     while q:
         pos, dirs = q.popleft()
         if pos == end:
-            if shortest_dirs == "":
+            if len(shortest_dirs) == 0:
                 shortest_dirs = dirs
             if len(dirs) > len(longest_dirs):
                 longest_dirs = dirs
