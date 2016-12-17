@@ -14,7 +14,6 @@ def largest_pow_2_dividing(n):
     return n & (~n + 1)
 
 def get_inverse_dragon_bitcount_parity(n):
-    if n < 0 : return 0
     return ((n - bin(n ^ (n >> 1)).count('1')) >> 1) & 1
 
 def construct_counts_raw_bitstring(a):
