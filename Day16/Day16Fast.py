@@ -31,7 +31,7 @@ def get_checksum(a, disk_capacity):
     b = reverse_and_flip_bits(a)
     x = largest_pow_2_dividing(disk_capacity)
     checksum = ""
-    for k in range(disk_capacity//x):
+    for k in range(disk_capacity // x):
         count_right = cumulative_bitcount_parity((k + 1) * x - 1, len(a), a, b)
         count_left = cumulative_bitcount_parity(k * x - 1, len(a), a, b)
         checksum += str(int(count_right - count_left & 1 == 0))
