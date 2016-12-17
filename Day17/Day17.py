@@ -5,7 +5,7 @@ code = "qtetzkpl"
 
 def get_moves(code, dirs):
     moves = {'U': (-1, 0), 'D': (1, 0), 'L': (0, -1), 'R': (0, 1)}
-    cur_hash = md5((code + dirs).encode()).hexdigest()[:4]
+    cur_hash = md5((code + dirs).encode()).hexdigest()
     return [(move, moves[move]) for index, move in enumerate("UDLR") if cur_hash[index] in "bcdef"]
 
 def bfs(code, start, end):
