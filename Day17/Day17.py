@@ -1,4 +1,3 @@
-import re
 from hashlib import md5
 from collections import deque
 
