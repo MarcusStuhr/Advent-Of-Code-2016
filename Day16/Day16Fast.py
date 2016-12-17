@@ -6,10 +6,10 @@ TODO: Code cleanup
 
 input_code = "00101000101111010"
 
-def revflip(a):
+def reverse_and_flip_bits(a):
     return ''.join('1' if x == '0' else '0' for x in a[::-1])
 
-def largpow(n):
+def exponent_pow_2(n):
     return int(log(n & (-n), 2))
 
 def get_inverse_dragon_bitcount_parity(n):
@@ -36,9 +36,9 @@ def cumulative_bitcount_parity(pos, L, a, b):
     return (parity_ab_up_to_m + parityA + parityB + get_inverse_dragon_bitcount_parity(dragon_index_so_far + 1)) % 2
 
 def get_checksum(a, disk_capacity):
-    b = revflip(a)
+    b = reverse_and_flip_bits(a)
     L = len(a)
-    x = largpow(disk_capacity)
+    x = exponent_pow_2(disk_capacity)
     checksum = ""
     for k in range(disk_capacity//2**x):
         count_right = cumulative_bitcount_parity((k + 1) * (2 ** x) - 1, L, a, b)
