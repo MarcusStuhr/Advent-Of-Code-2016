@@ -19,5 +19,4 @@ def count_safe_tiles_grid(first_row, num_rows):
 
 first_row = open(DATA_FILENAME).read().split("\n")[0]
 print(count_safe_tiles_grid(first_row, 40))
-first_row = open(DATA_FILENAME).read().split("\n")[0]
 print(count_safe_tiles_grid(first_row, 400000))
