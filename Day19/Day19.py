@@ -1,4 +1,13 @@
-import re
+from math import log
 
-DATA_FILENAME = "data.txt"
-lines = open(DATA_FILENAME).read().split("\n")
+NUM_ELVES = 3014603
+
+def josephus(n):
+    return int(bin(n)[3:] + '1', 2)
+
+def josephus_across(n):
+    t = 3**int(log(n, 3))
+    return n if n == t else max(2*n - 3*t, n - t)
+
+print(josephus(NUM_ELVES))
+print(josephus_across(NUM_ELVES))
