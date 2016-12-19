@@ -4,12 +4,7 @@ from time import clock
 
 NUM_ELVES = 3014603
 
-def josephus(n):
-    return int(bin(n)[3:] + '1', 2)
-
-def josephus_across(n):
-    t = 3**int(log(n, 3))
-    return n if n == t else max(n - t, 2*n - 3*t)
+#The "slow" implementations, O(n) time and memory
 
 def josephus_slow(n):
     d = deque(range(1, n + 1))
@@ -27,6 +22,15 @@ def josephus_across_slow(n):
         if len(left_deque) == len(right_deque) - 2:
             left_deque.append(right_deque.popleft())
     return right_deque[0]
+
+#The "fast" implementations, O(log(n)) time and O(1) memory
+
+def josephus(n):
+    return int(bin(n)[3:] + '1', 2)
+
+def josephus_across(n):
+    t = 3**int(log(n, 3))
+    return n if n == t else max(n - t, 2*n - 3*t)
 
 t = clock()
 print(josephus_slow(NUM_ELVES))
