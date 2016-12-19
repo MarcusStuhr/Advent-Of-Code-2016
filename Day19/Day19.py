@@ -7,7 +7,7 @@ def josephus(n):
 
 def josephus_across(n):
     t = 3**int(log(n, 3))
-    return n if n == t else max(2*n - 3*t, n - t)
+    return n if n == t else max(n - t, 2*n - 3*t)
 
 print(josephus(NUM_ELVES))
 print(josephus_across(NUM_ELVES))
