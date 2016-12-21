@@ -11,7 +11,7 @@ def scrambler(input_string, instructions):
 
     for line in instructions:
         nums = re.findall(r"([\d]+)", line)
-        letters = re.findall(r"letter ([\w]+)", line)
+        letters = re.findall(r"letter ([\w])", line)
 
         if line.startswith("swap"):
             if len(letters) > 0:
