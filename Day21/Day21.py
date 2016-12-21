@@ -39,8 +39,8 @@ def scrambler(input_string, instructions):
             code.insert(to_pos, letter_to_insert)
 
         elif line.startswith("reverse"):
-            startPos, endPos = map(int, nums)
-            code = code[:startPos] + code[startPos:endPos + 1][::-1] + code[endPos + 1:]
+            start_pos, end_pos = map(int, nums)
+            code = code[:start_pos] + code[start_pos:end_pos + 1][::-1] + code[end_pos + 1:]
 
     return ''.join(code)
 
