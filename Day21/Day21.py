@@ -1,15 +1,15 @@
 import re
-from itertools import permutations
 
 def rotate(code, steps, towards_right = True):
     slice_sign = -1 if towards_right else 1
     steps %= len(code)
     return code[slice_sign * steps:] + code[:slice_sign * steps]
 
-def scrambler(input_string, instructions):
+def scrambler(input_string, instructions, unscramble = False):
     code = list(input_string)
+    direction = -1 if unscramble else 1
 
-    for line in instructions:
+    for line in instructions[::direction]:
         nums = re.findall(r"([\d]+)", line)
         letters = re.findall(r"letter ([\w])", line)
 
@@ -21,19 +21,21 @@ def scrambler(input_string, instructions):
             code[pos1], code[pos2] = code[pos2], code[pos1]
 
         elif line.startswith("rotate left"):
-            code = rotate(code, int(nums[0]), False)
+            code = rotate(code, int(nums[0]), False if not unscramble else True)
 
         elif line.startswith("rotate right"):
-            code = rotate(code, int(nums[0]), True)
+            code = rotate(code, int(nums[0]), True if not unscramble else False)
 
         elif line.startswith("rotate based"):
             pos = code.index(letters[0])
-            if pos >= 4:
-                pos += 1
-            code = rotate(code, pos + 1, True)
+            if (not unscramble):
+                steps = pos + 1 + (pos >= len(code)//2)
+            else:
+                steps = (pos + 1) // 2 + (pos % 2 == 0) * (len(code) // 2 + 1)
+            code = rotate(code, steps, True if not unscramble else False)
 
         elif line.startswith("move"):
-            from_pos, to_pos = map(int, nums)
+            from_pos, to_pos = list(map(int, nums))[::direction]
             letter_to_insert = code[from_pos]
             code.remove(letter_to_insert)
             code.insert(to_pos, letter_to_insert)
@@ -48,9 +50,4 @@ def scrambler(input_string, instructions):
 instructions = open("data.txt").read().split("\n")
 
 print(scrambler("abcdefgh", instructions)) #part 1 answer
-
-for p in permutations("abcdefgh"):
-    input_string = ''.join(p)
-    if scrambler(input_string, instructions) == "fbgdceah":
-        print(input_string) #part 2 answer
-        break
+print(scrambler("fbgdceah", instructions, True)) #part 2 answer
