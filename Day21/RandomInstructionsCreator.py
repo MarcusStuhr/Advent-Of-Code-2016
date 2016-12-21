@@ -36,7 +36,3 @@ def random_instructions_creator(input_string, num_instructions):
         instructions.append(instruction)
 
     return instructions
-
-
-instructions = random_instructions_creator("abcdefgh", 100)
-print('\n'.join(instructions))
