@@ -3,7 +3,7 @@ from RandomInstructionsCreator import random_instructions_creator
 from string import ascii_lowercase
 
 def test(max_len_string=26, num_trials_per_string=100, num_instructions=100):
-    for len_string in range(4, max_len_string + 1, 2):
+    for len_string in range(2, max_len_string + 1, 2):
         input_string = ascii_lowercase[:len_string]
         print("Performing tests for input string \"{}\"...".format(input_string))
         for trial in range(num_trials_per_string):
