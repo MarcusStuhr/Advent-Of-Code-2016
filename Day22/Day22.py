@@ -13,7 +13,7 @@ This makes several assumptions (due to how the AoC data was constructed):
 -Among the rest of the nodes, the minimum Size is >= the maximum Used. This ensures that any viable node, if it
  is empty, will be able to accept *all* of the data from any other viable node.
 
--Any given pair of nodes that allow for data transfer between them must involve the free node.
+-Any given pair of nodes that allow for data transfer between them must involve the empty node.
 
 -These assumptions reduce the entire problem to a variant of the 15-puzzle, except certain tiles are off-limits,
 and we only have to worry about getting one tile into position (moving the goal piece over to (0, 0)).
