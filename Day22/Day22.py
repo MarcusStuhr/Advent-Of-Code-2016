@@ -13,6 +13,8 @@ This makes several assumptions (due to how the AoC data was constructed):
 -Among the rest of the nodes, the minimum Size is >= the maximum Used. This ensures that any viable node, if it
  is empty, will be able to accept *all* of the data from any other viable node.
 
+-Any given pair of nodes that allow for data transfer between them must involve the free node.
+
 -These assumptions reduce the entire problem to a variant of the 15-puzzle, except certain tiles are off-limits,
 and we only have to worry about getting one tile into position (moving the goal piece over to (0, 0)).
 """
@@ -130,4 +132,4 @@ if min_size < max_used:
 
 print(num_viable) #part 1 answer
 print(a_star_search(unviable_nodes, (0, 0), (max_x, 0), empty_node_pos, max_x, max_y)) #part 2 answer
-print_grid(max_x, max_y, empty_node_pos, unviable_nodes)
+#print_grid(max_x, max_y, empty_node_pos, unviable_nodes)
