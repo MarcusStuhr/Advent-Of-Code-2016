@@ -2,6 +2,21 @@ import re
 import heapq
 from itertools import combinations
 
+"""
+This makes several assumptions (due to how the AoC data was constructed):
+
+-There exists exactly one node with 0T Used, the initial "empty node."
+
+-There may exist "unviable" nodes with very large Size and Used attributes that aren't able to transfer data out
+ to any other node due to their relatively limited Size / Avail attributes.
+
+-Among the rest of the nodes, the minimum Size is >= the maximum Used. This ensures that any viable node, if it
+ is empty, will be able to accept *all* of the data from any other viable node.
+
+-These assumptions reduce the entire problem to a variant of the 15-puzzle, except certain tiles are off-limits,
+and we only have to worry about getting one tile into position (moving the goal piece over to (0, 0)).
+"""
+
 def assess_node_viability(nodes, empty_node_pos):
     num_viable = 0
     unviable_nodes = set()
@@ -110,7 +125,7 @@ for line in lines:
 
 num_viable, unviable_nodes = assess_node_viability(nodes, empty_node_pos)
 max_used = max(nodes[(x, y)][0] for x in range(max_x + 1) for y in range(max_y + 1) if (x, y) not in unviable_nodes)
-if max_used > min_size:
+if min_size < max_used:
     raise Exception("The smallest node size must exceed the largest node usage for viable nodes.")
 
 print(num_viable) #part 1 answer
