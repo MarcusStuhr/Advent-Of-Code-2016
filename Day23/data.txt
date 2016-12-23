@@ -3,8 +3,8 @@ dec b
 cpy a d
 cpy 0 a
 mul b d a
-nop
-nop
+cpy 0 c
+cpy 0 d
 nop
 nop
 nop
