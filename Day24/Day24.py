@@ -58,9 +58,9 @@ def a_star_search(graph, start_node, end_node, wall_tile=WALL_TILE, a_star_memo=
     return a_star_memo[memo_key]
 
 
-def min_cost_circuit(graph, target_cells, start_node, already_visited, home_node=None, visit_memo={}):
+def min_cost_circuit(graph, target_nodes, start_node, already_visited, home_node=None, visit_memo={}):
     memo_key = (start_node, already_visited, home_node)
-    if already_visited == (1 << len(target_cells)) - 1:
+    if already_visited == (1 << len(target_nodes)) - 1:
         if home_node != None:
             return a_star_search(graph, start_node, home_node)
         else:
@@ -69,9 +69,9 @@ def min_cost_circuit(graph, target_cells, start_node, already_visited, home_node
         return visit_memo[memo_key]
 
     min_cost = float('inf')
-    for index, next_node in enumerate(target_cells):
+    for index, next_node in enumerate(target_nodes):
         if (already_visited & (1 << index)) == 0:
-            min_cost_next = min_cost_circuit(graph, target_cells, next_node, already_visited | (1 << index), home_node)
+            min_cost_next = min_cost_circuit(graph, target_nodes, next_node, already_visited | (1 << index), home_node)
             min_cost = min(min_cost, min_cost_next + a_star_search(graph, start_node, next_node))
     visit_memo[memo_key] = min_cost
 
@@ -80,15 +80,15 @@ def min_cost_circuit(graph, target_cells, start_node, already_visited, home_node
 
 graph = open(DATA_FILENAME).read().split("\n")
 
-target_cells = OrderedDict()
+target_nodes = OrderedDict()
 for r in range(len(graph)):
     for c in range(len(graph[0])):
         if graph[r][c] not in (WALL_TILE, EMPTY_TILE):
-            target_cells[graph[r][c]] = (r, c)
+            target_nodes[graph[r][c]] = (r, c)
 
-home_cell = target_cells[START_SYMBOL]
-target_cells = [v for k,v in sorted(target_cells.items())]
-already_visited = (1 << target_cells.index(home_cell))
+home_node = target_nodes[START_SYMBOL]
+target_nodes = [v for k,v in sorted(target_nodes.items())]
+already_visited = (1 << target_nodes.index(home_node))
 
-print(min_cost_circuit(graph, target_cells, home_cell, already_visited)) #part 1 answer
-print(min_cost_circuit(graph, target_cells, home_cell, already_visited, home_cell)) #part 2 answer
+print(min_cost_circuit(graph, target_nodes, home_node, already_visited)) #part 1 answer
+print(min_cost_circuit(graph, target_nodes, home_node, already_visited, home_node)) #part 2 answer
