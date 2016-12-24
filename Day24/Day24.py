@@ -1,5 +1,9 @@
 from heapq import heappush, heappop
 
+DATA_FILENAME = "data.txt"
+WALL_TILE = '#'
+EMPTY_TILE = '.'
+
 class PriorityQueue:
     def __init__(self):
         self.elements = []
@@ -20,7 +24,7 @@ def heuristic(pos1, pos2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-def a_star_search(graph, start_node, end_node, a_star_memo={}):
+def a_star_search(graph, start_node, end_node, wall_tile=WALL_TILE, a_star_memo={}):
     memo_key = (start_node, end_node)
     if memo_key in a_star_memo:
         return a_star_memo[memo_key]
@@ -38,9 +42,9 @@ def a_star_search(graph, start_node, end_node, a_star_memo={}):
         if current == end_node:
             a_star_memo[memo_key] = cost_so_far[current]
             return a_star_memo[memo_key]
-        for delta_r, delta_c in ((-1,0),(1,0),(0,-1),(0,1)):
+        for delta_r, delta_c in ((-1, 0), (1, 0), (0, -1), (0, 1)):
             new_r, new_c = r + delta_r, c + delta_c
-            if graph[new_r][new_c] != '#':
+            if graph[new_r][new_c] != wall_tile:
                 next_state = (new_r, new_c)
                 new_cost = cost_so_far[current] + 1
                 if next_state not in cost_so_far or new_cost < cost_so_far[next_state]:
@@ -64,7 +68,7 @@ def min_cost_circuit(graph, target_cells, start_node, already_visited, home_node
         return visit_memo[memo_key]
 
     min_cost = float('inf')
-    for index, next_node in enumerate(target_cells.values()):
+    for index, next_node in enumerate(target_cells):
         if (already_visited & (1 << index)) == 0:
             min_cost_next = min_cost_circuit(graph, target_cells, next_node, already_visited | (1 << index), home_node)
             min_cost = min(min_cost, min_cost_next + a_star_search(graph, start_node, next_node))
@@ -73,14 +77,14 @@ def min_cost_circuit(graph, target_cells, start_node, already_visited, home_node
     return visit_memo[memo_key]
 
 
-DATA_FILENAME = "data.txt"
 graph = open(DATA_FILENAME).read().split("\n")
 
 target_cells = {}
 for r in range(len(graph)):
     for c in range(len(graph[0])):
-        if graph[r][c].isdigit():
-            target_cells[int(graph[r][c])] = (r, c)
+        if graph[r][c] not in (WALL_TILE, EMPTY_TILE):
+            target_cells[graph[r][c]] = (r, c)
 
+target_cells = sorted(target_cells.values())
 print(min_cost_circuit(graph, target_cells, target_cells[0], 1)) #part 1 answer
 print(min_cost_circuit(graph, target_cells, target_cells[0], 1, target_cells[0])) #part 2 answer
