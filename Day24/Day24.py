@@ -53,7 +53,7 @@ def a_star_search(graph, start_node, end_node, a_star_memo={}):
     return a_star_memo[memo_key]
 
 
-def min_cost_path(graph, target_cells, start_node, already_visited, home_node=None, visit_memo={}):
+def min_cost_circuit(graph, target_cells, start_node, already_visited, home_node=None, visit_memo={}):
     memo_key = (start_node, already_visited, home_node)
     if already_visited == (1 << len(target_cells)) - 1:
         if home_node != None:
@@ -66,7 +66,7 @@ def min_cost_path(graph, target_cells, start_node, already_visited, home_node=No
     min_cost = float('inf')
     for index, next_node in enumerate(target_cells.values()):
         if (already_visited & (1 << index)) == 0:
-            min_cost_next = min_cost_path(graph, target_cells, next_node, already_visited | (1 << index), home_node)
+            min_cost_next = min_cost_circuit(graph, target_cells, next_node, already_visited | (1 << index), home_node)
             min_cost = min(min_cost, min_cost_next + a_star_search(graph, start_node, next_node))
     visit_memo[memo_key] = min_cost
 
@@ -82,5 +82,5 @@ for r in range(len(graph)):
         if graph[r][c].isdigit():
             target_cells[int(graph[r][c])] = (r, c)
 
-print(min_cost_path(graph, target_cells, target_cells[0], 1)) #part 1 answer
-print(min_cost_path(graph, target_cells, target_cells[0], 1, target_cells[0])) #part 2 answer
+print(min_cost_circuit(graph, target_cells, target_cells[0], 1)) #part 1 answer
+print(min_cost_circuit(graph, target_cells, target_cells[0], 1, target_cells[0])) #part 2 answer
